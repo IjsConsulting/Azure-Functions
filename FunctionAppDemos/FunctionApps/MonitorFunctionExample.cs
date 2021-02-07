@@ -20,8 +20,8 @@ namespace FunctionApps
         /// <param name="log"></param>
         /// <code>curl --location --request GET 'http://localhost:7071/api/HttpStart'</code>
         /// <returns></returns>
-        [FunctionName("HttpStart")]
-        public static async Task<HttpResponseMessage> HttpStart(
+        [FunctionName("MonitorHttpStart")]
+        public static async Task<HttpResponseMessage> MonitorHttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
             ILogger log)
@@ -35,7 +35,7 @@ namespace FunctionApps
         }
 
         [FunctionName("MonitorOrchestration")]
-        public static async Task RunOrchestrator(
+        public static async Task MonitorOrchestration(
             [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
             int jobId = context.GetInput<int>();
@@ -44,7 +44,7 @@ namespace FunctionApps
 
             while (context.CurrentUtcDateTime < expiryTime)
             {
-                var jobStatus = await context.CallActivityAsync<string>("GetJobStatus", jobId);
+                var jobStatus = await context.CallActivityAsync<string>("GetJobStatus-Activity", jobId);
                 if (jobStatus == "Completed")
                 {
                     // Perform an action when a condition is met.
