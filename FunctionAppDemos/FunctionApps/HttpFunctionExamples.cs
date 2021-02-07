@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace FunctionApps
 {
-    public static class FunctionExamples
+    public static class HttpFunctionExamples
     {
         /// <summary>
         /// Azure functions
