@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace FunctionApps
+namespace FunctionApps.Functions
 {
     public static class HttpFunctionExamples
     {

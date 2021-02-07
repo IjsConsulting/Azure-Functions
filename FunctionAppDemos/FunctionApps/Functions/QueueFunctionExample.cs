@@ -1,10 +1,8 @@
-using System;
 using System.IO;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionApps
+namespace FunctionApps.Functions
 {
     public static class QueueFunctionExample
     {

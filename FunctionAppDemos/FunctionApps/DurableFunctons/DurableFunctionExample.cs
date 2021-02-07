@@ -6,7 +6,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionApps
+namespace FunctionApps.DurableFunctons
 {
     public static class DurableFunctionExample
     {  

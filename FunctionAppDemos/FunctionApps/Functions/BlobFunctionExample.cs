@@ -2,7 +2,7 @@ using System.IO;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionApps
+namespace FunctionApps.Functions
 {
     public static class BlobFunctionExample
     {
