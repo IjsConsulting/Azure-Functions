@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -7,9 +6,9 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionApps.DurableFunctons
+namespace FunctionApps.DurableFunctions
 {
-    public static class FanOutDurableFunctionExample
+    public static class DurableFunctionExample
     {  
         /// <summary>
         /// Entry point for the durable function 
@@ -19,50 +18,42 @@ namespace FunctionApps.DurableFunctons
         /// <param name="log"></param>
         /// <code>curl --location --request GET 'http://localhost:7071/api/HttpStart'</code>
         /// <returns></returns>
-        [FunctionName("HttpFanOutStart")]
+        [FunctionName("HttpStart")]
         public static async Task<HttpResponseMessage> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
             ILogger log)
         {
             // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync("FanOut-Orchestration", null);
+            string instanceId = await starter.StartNewAsync("Orchestration", null);
 
             log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
             return starter.CreateCheckStatusResponse(req, instanceId);
         }
 
-        [FunctionName("FanOut-Orchestration")]
+        [FunctionName("Orchestration")]
         public static async Task<List<string>> RunOrchestrator(
             [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
-            var parallelTasks = new List<Task<string>>
-            {
-                context.CallActivityAsync<string>("FanOut-SayHello-Activity", "Tokyo"),
-                context.CallActivityAsync<string>("FanOut-SayGoodBye-Activity", "Seattle"),
-                context.CallActivityAsync<string>("SayHello-Activity", "London")
-            };
+            var outputs = new List<string>();
 
-            await Task.WhenAll(parallelTasks);
+            // Replace "hello" with the name of your Durable Activity Function.
+            outputs.Add(await context.CallActivityAsync<string>("SayHello-Activity", "Tokyo"));
+            outputs.Add(await context.CallActivityAsync<string>("SayHello-Activity", "Seattle"));
+            outputs.Add(await context.CallActivityAsync<string>("SayHello-Activity", "London"));
 
-            var outputs = parallelTasks.Select(t => t.Result).ToList();
-
+            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
             return outputs;
         }
 
-        [FunctionName("FanOut-SayHello-Activity")]
+        [FunctionName("SayHello-Activity")]
         public static string SayHello([ActivityTrigger] string name, ILogger log)
         {
             log.LogInformation($"Saying hello to {name}.");
             return $"Hello {name}!";
         }
 
-        [FunctionName("FanOut-SayGoodBye-Activity")]
-        public static string SayGoodBye([ActivityTrigger] string name, ILogger log)
-        {
-            log.LogInformation($"Saying goodbye to {name}.");
-            return $"Bye {name}!";
-        }
+      
     }
 }
