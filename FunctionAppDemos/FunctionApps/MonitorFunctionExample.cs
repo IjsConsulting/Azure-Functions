@@ -35,7 +35,7 @@ namespace FunctionApps
         }
 
         [FunctionName("MonitorOrchestration")]
-        public static async Task<List<string>> RunOrchestrator(
+        public static async Task RunOrchestrator(
             [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
             int jobId = context.GetInput<int>();
