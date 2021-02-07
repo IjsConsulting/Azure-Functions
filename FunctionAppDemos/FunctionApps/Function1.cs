@@ -11,6 +11,13 @@ namespace FunctionApps
 {
     public static class FunctionExamples
     {
+        /// <summary>
+        /// Azure functions
+        /// </summary>
+        /// <param name="req">Http Request</param>
+        /// <param name="log">Logging</param>
+        /// <returns>OkObjectResult object</returns>
+        /// <code>curl --location --request POST 'http://localhost:7071/api/SendName'</code>
         [FunctionName("SendName")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
